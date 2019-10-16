@@ -14,8 +14,8 @@ import org.I0Itec.zkclient.serialize.SerializableSerializer;
 public class ZkClientWatchTest {
 
     public static void main(String[] args) {
-        ZkClient zk = new ZkClient("localhost:2181", 10000, 10000, new SerializableSerializer());
+        ZkClient zk = new ZkClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", 10000, 10000, new SerializableSerializer());
 
-        zk.writeData("/data", "7");
+        zk.writeData("/data", "2");
     }
 }

@@ -26,7 +26,7 @@ public class LeaderLatchExample {
         List<LeaderLatch> leaderLatches = Lists.newArrayList();
 
         for(int i=0; i<10; i++) {
-            CuratorFramework client = CuratorFrameworkFactory.newClient("localhost:2181", new RetryNTimes(1,1000));
+            CuratorFramework client = CuratorFrameworkFactory.newClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", new RetryNTimes(1,1000));
             clients.add(client);
             client.start();
 
@@ -36,7 +36,7 @@ public class LeaderLatchExample {
             leaderLatch.start();
         }
 
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(20);
 
         for (LeaderLatch leaderLatch: leaderLatches) {
             if (leaderLatch.hasLeadership()) {

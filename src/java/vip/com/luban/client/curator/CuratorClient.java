@@ -22,16 +22,16 @@ public class CuratorClient {
 
     public static void main(String[] args) throws Exception {
 
-        CuratorFramework client = CuratorFrameworkFactory.newClient("localhost:2181",
+        CuratorFramework client = CuratorFrameworkFactory.newClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183",
                 new RetryNTimes(3, 1000));
         client.start();
 
-//        client.create().withMode(CreateMode.EPHEMERAL).forPath("/data", "3".getBytes());
+        client.create().withMode(CreateMode.EPHEMERAL).forPath("/data", "3".getBytes());
 
 
         String path = "/data";
 //        NodeCache nodeCache = new NodeCache(client, path);
-//        nodeCache.start(false);
+//        nodeCache.start(true);
 //        nodeCache.getListenable().addListener(new NodeCacheListener() {
 //            @Override
 //            public void nodeChanged() throws Exception {

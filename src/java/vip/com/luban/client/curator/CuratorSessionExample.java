@@ -17,7 +17,7 @@ import org.apache.curator.retry.RetryNTimes;
 public class CuratorSessionExample {
 
     public static void main(String[] args) {
-        final CuratorFramework client  = CuratorFrameworkFactory.newClient("localhost:2181", 1000, 1000, new RetryNTimes(1, 1000));
+        final CuratorFramework client  = CuratorFrameworkFactory.newClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", 1000, 1000, new RetryNTimes(1, 1000));
 
         client.start();
 

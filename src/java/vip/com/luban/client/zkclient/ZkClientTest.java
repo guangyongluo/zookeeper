@@ -17,9 +17,9 @@ import java.io.IOException;
 public class ZkClientTest {
 
     public static void main(String[] args) throws IOException {
-        ZkClient zk = new ZkClient("localhost:2181", 10000, 10000, new SerializableSerializer());
+        ZkClient zk = new ZkClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", 10000, 10000, new SerializableSerializer());
 
-//        zk.createPersistent("/data", "1".getBytes());
+        zk.createPersistent("/data", "1");
 
         zk.subscribeDataChanges("/data", new IZkDataListener() {
             @Override

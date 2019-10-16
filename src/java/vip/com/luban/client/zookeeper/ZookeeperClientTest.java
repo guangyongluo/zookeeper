@@ -4,6 +4,7 @@ import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * *************书山有路勤为径***************
@@ -15,31 +16,41 @@ import java.io.IOException;
  */
 public class ZookeeperClientTest {
 
+    private static CountDownLatch connectedSemaphore = new CountDownLatch( 1 );
+
     public static void main(String[] args) throws IOException, KeeperException, InterruptedException {
+
         // 默认的watch
-        ZooKeeper client = new ZooKeeper("localhost:2181", 5000, new Watcher() {
+        ZooKeeper client = new ZooKeeper("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", 5000, new Watcher() {
+
             @Override
             public void process(WatchedEvent event) {
                 System.out.println("连接的时候" + event);
+                if ( Event.KeeperState.SyncConnected == event.getState() ) {
+                    connectedSemaphore.countDown();
+                }
             }
         });
 
+        connectedSemaphore.await();
+
         Stat stat = new Stat();
-        client.getData("/testW", new Watcher() {
-            @Override
-            public void process(WatchedEvent event) {
-                    if (Event.EventType.NodeDataChanged.equals(event.getType())) {
-                        System.out.println("数据发送了改变");
-                    }
-            }
-        }, stat);
+//        client.getData("/luban", new Watcher() {
+//            @Override
+//            public void process(WatchedEvent event) {
+//                    if (Event.EventType.NodeDataChanged.equals(event.getType())) {
+//                        System.out.println("数据发送了改变");
+//                    }
+//            }
+//        }, stat);
 
 
-//        String s = new String(client.getData("/data", false, stat));
+//        String s = new String(client.getData("/luban", false, stat));
+//        System.out.println(s);
 
-//        client.create("/data", "1".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
+        client.create("/data", "1".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT_SEQUENTIAL);
 
-//        client.getData("/data", false, new AsyncCallback.DataCallback() {
+//        client.getData("/luban", false, new AsyncCallback.DataCallback() {
 //            @Override
 //            public void processResult(int rc, String path, Object ctx, byte[] data, Stat stat) {
 //                System.out.println("123123123");
