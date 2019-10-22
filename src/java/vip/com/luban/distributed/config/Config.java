@@ -30,7 +30,7 @@ public class Config {
 
 
     public Config() {
-        this.client = CuratorFrameworkFactory.newClient("localhost:2181", new RetryNTimes(3, 1000));
+        this.client = CuratorFrameworkFactory.newClient("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", new RetryNTimes(3, 1000));
         client.start();
 
         init();

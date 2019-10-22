@@ -26,25 +26,36 @@ public class Zklock implements Lock {
     private String LOCK_NAME = "/LOCK";
     private ThreadLocal<String> CURRENT_NODE = new ThreadLocal<>() ;
     //
+    private static CountDownLatch connectedSemaphore = new CountDownLatch( 1 );
 
-    public void init() {
+
+    public void init() throws InterruptedException {
         if (zk.get() ==null) {
             try {
-                zk.set(new ZooKeeper("localhost:2181", 300, new Watcher() {
+                zk.set(new ZooKeeper("192.168.193.128:2181,192.168.193.128:2182,192.168.193.128:2183", 300, new Watcher() {
                     @Override
                     public void process(WatchedEvent event) {
                         // ..
+                        if ( Event.KeeperState.SyncConnected == event.getState() ) {
+                                           connectedSemaphore.countDown();
+                                       }
+
                     }
                 }));
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            connectedSemaphore.await();
         }
     }
 
     public void lock() {
-        init();
+        try {
+            init();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //
         if (tryLock()) {
